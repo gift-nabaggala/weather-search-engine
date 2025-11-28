@@ -1,57 +1,68 @@
-function displayTemperature(response) {
-  console.log(response.data.temperature.current);
+// function displayTemperature(response) {
+//   console.log(response.data.temperature.current);
+//   let temperatureElement = document.querySelector("#current-temperature");
+//   let temperature = Math.round(response.data.temperature.current);
+
+//   temperatureElement.innerHTML = temperature;
+// }
+
+function refreshWeather(response) {
   let temperatureElement = document.querySelector("#current-temperature");
-  let temperature = Math.round(response.data.temperature.current);
+  let temperature = response.data.temperature.current;
+  temperatureElement.innerHTML = Math.round(temperature);
+
   let currentCity = document.querySelector("#current-city");
   currentCity.innerHTML = response.data.city;
-  temperatureElement.innerHTML = temperature;
 }
 
-function search(event) {
-  event.preventDefault();
-  let searchInput = document.querySelector("#search-input");
-
+function searchCity(city) {
   //Create apiUrl
   const apiKey = "344fd2b82ccb20at17163b1f587bo614";
-  let city = searchInput.value;
-  let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
-  axios.get(apiUrl).then(displayTemperature);
+  let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}`;
+  axios.get(apiUrl).then(refreshWeather);
   //Make the api call
   //Display the temperature
 }
 
-function formatDate(date) {
-  let minutes = date.getMinutes();
-  let hours = date.getHours();
-  let day = date.getDay();
+function handleSearchSubmit(event) {
+  event.preventDefault();
+  let searchInput = document.querySelector("#search-input");
 
-  if (minutes < 10) {
-    minutes = `0${minutes}`;
-  }
-
-  if (hours < 10) {
-    hours = `0${hours}`;
-  }
-
-  let days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-
-  let formattedDay = days[day];
-
-  return `${formattedDay} ${hours}:${minutes}`;
+  searchCity(searchInput.value);
 }
 
+// function formatDate(date) {
+//   let minutes = date.getMinutes();
+//   let hours = date.getHours();
+//   let day = date.getDay();
+
+//   if (minutes < 10) {
+//     minutes = `0${minutes}`;
+//   }
+
+//   if (hours < 10) {
+//     hours = `0${hours}`;
+//   }
+
+//   let days = [
+//     "Sunday",
+//     "Monday",
+//     "Tuesday",
+//     "Wednesday",
+//     "Thursday",
+//     "Friday",
+//     "Saturday",
+//   ];
+
+//   let formattedDay = days[day];
+
+//   return `${formattedDay} ${hours}:${minutes}`;
+// }
+
 let searchForm = document.querySelector("#search-form");
-searchForm.addEventListener("submit", search);
+searchForm.addEventListener("submit", handleSearchSubmit);
 
-let currentDateElement = document.querySelector("#current-date");
-let currentDate = new Date();
+// let currentDateElement = document.querySelector("#current-date");
+// let currentDate = new Date();
 
-currentDateElement.innerHTML = formatDate(currentDate);
+// currentDateElement.innerHTML = formatDate(currentDate);
